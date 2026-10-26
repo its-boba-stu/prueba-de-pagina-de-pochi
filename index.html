@@ -1,0 +1,925 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Pochi</title>
+<script>
+/* Modo sol/luna guardado: se aplica antes de pintar para que no parpadee. */
+(function(){ var m = 'sol'; try{ m = localStorage.getItem('pochi_modo') || 'sol'; }catch(e){}
+  document.documentElement.setAttribute('data-modo', m === 'luna' ? 'luna' : 'sol');
+  document.documentElement.classList.add('js'); })();
+</script>
+<meta name="description" content="Pochi: robot asistente que lleva el medicamento hasta el adulto mayor, a tiempo.">
+<meta name="theme-color" content="#0f2a5c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500;700&family=Lexend:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/comun.css">
+<link rel="stylesheet" href="css/inicio.css">
+</head>
+<body>
+<!-- ============ PANTALLA DE CARGA: la pantalla de Pochi parpadeando + barra azul (1.5 s) ============
+     Recrea las dos imágenes de referencia de la pantalla real:
+     ojos abiertos (círculo turquesa) y parpadeo (línea turquesa). -->
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="intro-screen">
+    <div class="intro-eyes" id="introEyes">
+      <span class="ieye"><i></i></span>
+      <span class="ieye"><i></i></span>
+    </div>
+  </div>
+  <div class="intro-bar"><i id="introFill"></i></div>
+</div>
+<script>
+/* Decide ANTES de pintar si se reproduce: primera entrada al inicio en
+   esta visita, o se llegó tocando el logo del header. */
+(function(){
+  var play = location.hash === '#intro';
+  try{ if(sessionStorage.getItem('pochi_intro') === '1'){ play = true; sessionStorage.removeItem('pochi_intro'); } }catch(e){}
+  try{ if(!sessionStorage.getItem('pochi_intro_visto')){ play = true; } }catch(e){ play = true; }
+  if(play){
+    document.documentElement.classList.add('play-intro');
+    document.getElementById('intro').classList.add('run');
+  }
+})();
+</script>
+
+<header class="site">
+  <div class="nav-row">
+    <a href="index.html#intro" class="brand" data-intro aria-label="Inicio: Colegio Capouilliez y Pochi">
+      <img src="Recursos/logo_header.png" alt="Colegio Capouilliez | Pochi" width="663" height="128">
+    </a>
+    <nav class="links" id="navLinks" aria-label="Principal"><a href="index.html" aria-current="page">Inicio</a><a href="equipo.html">Equipo</a><a href="juego.html">Juego</a><a href="prototipo.html">Prototipo</a></nav>
+    <div class="nav-tools">
+      <button class="mode-toggle" id="modeToggle" type="button" aria-pressed="false" aria-label="Cambiar a modo luna" title="Cambiar a modo luna">
+        <span class="knob" aria-hidden="true"></span>
+        <span class="ico sun" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.6"/><path d="M11 1h2v3.2h-2zM11 19.8h2V23h-2zM1 11h3.2v2H1zM19.8 11H23v2h-3.2zM4.1 5.5l1.4-1.4 2.3 2.3-1.4 1.4zM16.2 17.6l1.4-1.4 2.3 2.3-1.4 1.4zM4.1 18.5l2.3-2.3 1.4 1.4-2.3 2.3zM16.2 6.4l2.3-2.3 1.4 1.4-2.3 2.3z"/></svg></span>
+        <span class="ico moon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1z"/></svg></span>
+      </button>
+      <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navLinks" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+<main id="contenido">
+<div class="wrap">
+  <section class="hero" aria-labelledby="titulo">
+    <div class="reveal">
+      <span class="eyebrow">Robot asistente de medicamentos</span>
+      <h1 id="titulo">Pochi lleva el medicamento hasta la persona. <em>A tiempo, cada vez.</em></h1>
+      <p class="lead">Busca al paciente por la habitación siguiendo la señal de su pulsera, le pregunta si está listo, entrega la pastilla del compartimento correcto y confirma que la tomó.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#como-funciona">Cómo funciona</a>
+        <a class="btn btn-ghost" href="#video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Ver el video</a>
+      </div>
+      <ul class="hero-facts">
+        <li class="fact-comp"><span><b>4</b> compartimentos de color</span>
+          <span class="comp-dots" aria-label="Verde, marrón, rojo y morado"><i style="--c:#2e9e4f" title="Verde"></i><i style="--c:#8b5a2b" title="Marrón"></i><i style="--c:#e53935" title="Rojo"></i><i style="--c:#7b3fbf" title="Morado"></i></span></li>
+        <li><svg class="fact-ico bt" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 2h1.2l6 6-4.6 4 4.6 4-6 6H11v-7.6l-4.4 4.2-1.4-1.4 5.4-5.2-5.4-5.2 1.4-1.4L11 9.6zm2 3.6v4.6l2.5-2.2zm0 8.2v4.6l2.5-2.4z"/></svg><span>Búsqueda por <b>pulsera Bluetooth</b></span></li>
+        <li><svg class="fact-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v6.2l-2 2V8h-4V4H6v16h6.5l-.4 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm2 8h8v1.8H8zm0 3.6h6v1.8H8zM20.6 14.4l1.8 1.8-6.2 6.2-2.4.6.6-2.4z"/></svg><span><b>Historial</b> de cada toma</span></li>
+      </ul>
+    </div>
+    <div class="hero-visual reveal">
+      <img class="hero-photo" src="Recursos/pochi_hero.png" alt="Pochi: robot blanco de cuerpo redondeado, con pantalla de ojos azules y dos brazos" loading="lazy">
+    </div>
+  </section>
+
+  <section class="section tight" aria-labelledby="t-problema">
+    <div class="reveal">
+      <span class="eyebrow">El problema</span>
+      <h2 class="h2" id="t-problema">Tomar el medicamento a tiempo es más difícil de lo que parece.</h2>
+    </div>
+    <div class="grid-3">
+      <article class="card pad prob reveal"><h3>Se olvida o se ignora</h3><p>Una alarma se apaga sin pensarlo. Pochi no se queda en sonar: va a buscar a la persona.</p>
+        <div class="ill ill-clock" aria-hidden="true"><span class="bell l"></span><span class="bell r"></span><span class="face"><i class="hh"></i><i class="mh"></i></span><span class="leg l"></span><span class="leg r"></span><span class="zz">z<small>z</small></span></div></article>
+      <article class="card pad prob reveal"><h3>Se confunde la pastilla</h3><p>Cada medicamento vive en su compartimento de color y Pochi entrega solo el que toca a esa hora.</p>
+        <div class="ill ill-pills" aria-hidden="true"><span class="cap" style="--a:#2e9e4f;--b:#bfe8cc;--r:-28deg;--x:-46px"></span><span class="cap" style="--a:#e53935;--b:#ffd0cc;--r:8deg;--x:0px"></span><span class="cap" style="--a:#7b3fbf;--b:#e2d1f5;--r:38deg;--x:46px"></span><span class="q">?</span></div></article>
+      <article class="card pad prob reveal"><h3>Nadie confirma</h3><p>Pochi espera a que la persona confirme en pantalla que ya la tomó y lo guarda en un historial que la familia puede revisar.</p>
+        <div class="ill ill-list" aria-hidden="true"><span class="clip"></span><span class="row ok"><i></i><b></b></span><span class="row ok"><i></i><b></b></span><span class="row no"><i></i><b></b></span></div></article>
+    </div>
+  </section>
+
+  <section class="section" id="como-funciona" aria-labelledby="t-como">
+    <div class="reveal">
+      <span class="eyebrow">Cómo funciona</span>
+      <h2 class="h2" id="t-como">Cuatro pasos, siempre los mismos.</h2>
+      <p class="lead">A la hora programada, Pochi hace esto. Los textos en las cajas oscuras son los que aparecen en su pantalla.</p>
+    </div>
+    <div class="steps">
+      <article class="card step reveal"><span class="step-n">01</span><h3>Busca al paciente</h3><p>Sigue la señal Bluetooth de la pulsera que la persona lleva puesta y esquiva los muebles con su sensor LiDAR.</p><span class="screen-chip">Buscando…</span></article>
+      <article class="card step reveal"><span class="step-n">02</span><h3>Pregunta</h3><p>En pantalla y en voz alta pregunta si es buen momento. Si la persona dice que no, vuelve en 5 minutos.</p><span class="screen-chip">¿Vas a tomarla ahora?</span></article>
+      <article class="card step reveal"><span class="step-n">03</span><h3>Dispensa</h3><p>Suelta la pastilla del compartimento de color correcto y sus brazos suben el plato hasta la persona.</p><span class="screen-chip">Tu pastilla está lista</span></article>
+      <article class="card step reveal"><span class="step-n">04</span><h3>Confirma</h3><p>Espera el toque en "Ya la tomé" y guarda la hora en el historial de tomas.</p><span class="screen-chip">¡Muy bien!</span></article>
+    </div>
+  </section>
+
+  <section class="section tight" id="conoce" aria-labelledby="t-conoce">
+    <div class="meet">
+      <figure class="pochi-frame reveal" data-from="left">
+        <img src="Recursos/pochi_frente.jpg" alt="Pochi de frente: robot blanco con pantalla de ojos azules, dos brazos y base con ruedas" loading="lazy" width="969" height="1098">
+        <figcaption>Pochi, el prototipo real.</figcaption>
+      </figure>
+      <div class="meet-text reveal" data-from="right">
+        <span class="eyebrow">Conoce a Pochi</span>
+        <h2 class="h2" id="t-conoce">Un robot pensado para acompañar.</h2>
+        <p class="lead">Cuerpo blanco y redondeado para que no intimide, una pantalla con ojos que parpadean y dos brazos que acercan la pastilla hasta la persona. Se mueve sobre orugas y conversa con voz para hacer compañía.</p>
+        <ul class="meet-list">
+          <li><b>Raspberry Pi 5</b> que decide qué hacer y cuándo</li>
+          <li><b>ESP32</b> que mueve las orugas, los brazos y los dispensadores</li>
+          <li><b>LiDAR 360°</b> para esquivar muebles</li>
+        </ul>
+        <a class="btn btn-primary" href="prototipo.html">Mira más detalles de nuestro prototipo <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.2 5.3 19.9 12l-6.7 6.7-1.4-1.4 4.3-4.3H4v-2h12.1l-4.3-4.3z"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight" id="demo" aria-labelledby="t-demo">
+    <div class="reveal">
+      <span class="eyebrow">Pruébalo</span>
+      <h2 class="h2" id="t-demo">Pochi no ve al paciente: sigue la señal de su pulsera.</h2>
+      <p class="lead">Lleva a Pochi por el laberinto hasta la pulsera sin tocar las paredes. El medidor muestra la intensidad de la señal, igual que la mide Pochi en la vida real.</p>
+    </div>
+    <div class="game reveal" id="demoGame">
+  <div class="g-top">
+    <div class="g-stats">
+      <div class="g-stat"><span>Nivel</span><b data-g="level">1 / 1</b></div>
+      <div class="g-stat"><span>Tiempo</span><b data-g="time">0.0 s</b></div>
+      
+    </div>
+    
+  </div>
+  <div class="g-body">
+    <div class="g-stage"><canvas class="g-canvas" width="468" height="324" aria-label="Laberinto: lleva a Pochi hasta la pulsera sin tocar las paredes"></canvas></div>
+    <div class="g-side">
+      <div class="g-panel">
+        <div class="g-label"><span>Señal de la pulsera</span><span>RSSI</span></div>
+        <div class="sig"><div class="sig-bars weak"><i class="on"></i><i></i><i></i><i></i><i></i></div><span class="sig-dbm">−95 dBm</span></div>
+      </div>
+      <p class="g-msg" aria-live="polite"></p>
+      <p class="g-help"><kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> o <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>. En celular: arrastra el dedo sobre el laberinto o usa las flechas.</p>
+      <div class="dpad" aria-label="Control táctil"><button type="button" data-dir="up" aria-label="Arriba"><svg viewBox="0 0 24 24"><path d="M12 6l7 9H5z"/></svg></button><button type="button" data-dir="left" aria-label="Izquierda"><svg viewBox="0 0 24 24"><path d="M6 12l9-7v14z"/></svg></button><span class="dpad-c"><span class="eyes eyes-sm"><span class="eye"><i></i></span><span class="eye"><i></i></span></span></span><button type="button" data-dir="right" aria-label="Derecha"><svg viewBox="0 0 24 24"><path d="M18 12l-9 7V5z"/></svg></button><button type="button" data-dir="down" aria-label="Abajo"><svg viewBox="0 0 24 24"><path d="M12 18l-7-9h14z"/></svg></button></div>
+    </div>
+  </div>
+  <div class="g-modal" hidden></div>
+  
+</div>
+  </section>
+
+  <section class="section" id="video" aria-labelledby="t-video">
+    <div class="reveal">
+      <span class="eyebrow">Video principal</span>
+      <h2 class="h2" id="t-video">Pochi en acción.</h2>
+    </div>
+    <div class="reveal" style="margin-top:28px">
+      <div class="player" data-src="Recursos/video_principal.mp4" data-poster="Recursos/video_principal_portada.jpg" data-title="Pochi en acción"></div>
+    </div>
+  </section>
+
+  <section class="section tight" aria-labelledby="t-equipo">
+    <div class="reveal">
+      <span class="eyebrow">Equipo expositor</span>
+      <h2 class="h2" id="t-equipo">Nuestro equipo expositor hoy en CONCAPAN</h2>
+      <p class="lead">Ellos te presentan a Pochi. En total somos 21 integrantes.</p>
+    </div>
+    <div class="team-grid expo"><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_victor_arevalo.jpg" alt="Foto de Victor Arévalo" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_victor_arevalo.jpg</code></figcaption></figure><div><div class="member-name">Victor Arévalo</div><span class="member-role">Presidente</span></div></article><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_esteban_bobadilla.jpg" alt="Foto de Esteban Bobadilla" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_esteban_bobadilla.jpg</code></figcaption></figure><div><div class="member-name">Esteban Bobadilla</div><span class="member-role">Vicepresidente</span></div></article><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_sussel_escobar.jpg" alt="Foto de Sussel Escobar" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_sussel_escobar.jpg</code></figcaption></figure><div><div class="member-name">Sussel Escobar</div><span class="member-role">Secretaria</span></div></article><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_julio_ordonez.jpg" alt="Foto de Julio Ordoñez" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_julio_ordonez.jpg</code></figcaption></figure><div><div class="member-name">Julio Ordoñez</div><span class="member-role">Diseñador</span></div></article><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_marcos_bobadilla.jpg" alt="Foto de Marcos Bobadilla" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_marcos_bobadilla.jpg</code></figcaption></figure><div><div class="member-name">Marcos Bobadilla</div><span class="member-role">Programador y electrónico</span></div></article><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_mario_lopez.jpg" alt="Foto de Mario López" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_mario_lopez.jpg</code></figcaption></figure><div><div class="member-name">Mario López</div><span class="member-role">Programador</span></div></article></div>
+    <div class="contact-panel reveal">
+      <div class="cp-text">
+        <span class="eyebrow">Contacto</span>
+        <h2 class="h2">¿Quieres conocer y hablar con nuestro equipo?</h2>
+        <p>Escríbenos para conocer más sobre Pochi, cómo lo construimos o para ver una demostración en persona. Con gusto te respondemos.</p>
+      </div>
+      <div class="cp-actions">
+        <span class="cp-mail pending"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v14H3zm2 2v.5l7 4.5 7-4.5V7zm0 2.9V17h14V9.9l-7 4.5z"/></svg><span>Correo por definir</span></span>
+        <a class="btn btn-ghost" href="equipo.html">Conoce al resto del equipo <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.2 5.3 19.9 12l-6.7 6.7-1.4-1.4 4.3-4.3H4v-2h12.1l-4.3-4.3z"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight" aria-labelledby="t-colegio">
+    <div class="school-feature reveal">
+      <div class="sf-top">
+        <span class="sf-kicker">Hecho en Guatemala</span>
+        <img src="Recursos/logo_header.png" alt="Colegio Capouilliez | Pochi" width="663" height="128" loading="lazy">
+      </div>
+      <h2 id="t-colegio">Desarrollado por estudiantes preuniversitarios del <span>Colegio Capouilliez</span></h2>
+      <div class="sf-bottom">
+        <p>Pochi nació en las aulas del colegio: un proyecto de ingeniería real, diseñado, construido y programado por estudiantes.</p>
+        <a class="btn btn-light" href="https://www.capouilliez.edu.gt" target="_blank" rel="noopener">Visitar el sitio del colegio <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.2 5.3 19.9 12l-6.7 6.7-1.4-1.4 4.3-4.3H4v-2h12.1l-4.3-4.3z"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight" aria-label="Más sobre Pochi">
+    <div class="next-grid"><a class="card next-card reveal" href="juego.html"><span class="kicker">Juego</span><h3>El reto completo: 5 laberintos</h3><p>Más grandes, más engañosos y con niebla en los últimos niveles.</p><span class="go">Jugar →</span></a><a class="card next-card reveal" href="prototipo.html"><span class="kicker">Prototipo</span><h3>Cómo está construido</h3><p>Arquitectura, hardware, la interfaz real y los videos técnicos.</p><span class="go">Ver el prototipo →</span></a><a class="card next-card reveal" href="equipo.html"><span class="kicker">Equipo</span><h3>Quiénes construimos a Pochi</h3><p>Los 21 integrantes del equipo y sus roles.</p><span class="go">Conocer al equipo →</span></a></div>
+  </section>
+</div>
+</main>
+<footer class="site-foot">
+  <div class="foot-inner">
+    <div class="foot-brand">
+      <div class="row"><span class="eye-screen"><span class="eyes eyes-sm"><span class="eye"><i></i></span><span class="eye"><i></i></span></span></span>POCHI</div>
+      <p>Robot asistente de medicamentos para adultos mayores: busca, pregunta, entrega y confirma.</p>
+    </div>
+    <div class="foot-side">
+      <div class="foot-contact"><span class="foot-label">Contacto del equipo</span><span class="foot-mail pending"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v14H3zm2 2v.5l7 4.5 7-4.5V7zm0 2.9V17h14V9.9l-7 4.5z"/></svg><span>Correo por definir</span></span></div>
+      <nav class="foot-links" aria-label="Pie de página"><a href="index.html" aria-current="page">Inicio</a><a href="equipo.html">Equipo</a><a href="juego.html">Juego</a><a href="prototipo.html">Prototipo</a></nav>
+    </div>
+    <p class="foot-school">Proyecto desarrollado por estudiantes preuniversitarios del <a href="https://www.capouilliez.edu.gt" target="_blank" rel="noopener">Colegio Capouilliez</a>, Guatemala.</p>
+  </div>
+</footer>
+<script>
+/* ==================================================================
+   JS común de todas las páginas: modo sol/luna, menú móvil, header
+   que se encoge al bajar, botones que marcan el clic,
+   efecto de escala al hacer scroll y reproductores de video.
+   ================================================================== */
+(function(){
+  'use strict';
+  var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  /* ---------- modo sol / luna ----------
+     El modo se aplica antes de pintar (script en <head>); aquí solo se
+     cambia y se guarda para que se mantenga en todas las páginas. */
+  var modeBtn = document.getElementById('modeToggle');
+  function paintModeBtn(){
+    if(!modeBtn){ return; }
+    var luna = document.documentElement.getAttribute('data-modo') === 'luna';
+    modeBtn.setAttribute('aria-pressed', luna ? 'true' : 'false');
+    modeBtn.setAttribute('aria-label', luna ? 'Modo luna activo. Cambiar a modo sol' : 'Modo sol activo. Cambiar a modo luna');
+    modeBtn.setAttribute('title', luna ? 'Cambiar a modo sol' : 'Cambiar a modo luna');
+  }
+  if(modeBtn){
+    paintModeBtn();
+    modeBtn.addEventListener('click', function(){
+      var luna = document.documentElement.getAttribute('data-modo') !== 'luna';
+      document.documentElement.setAttribute('data-modo', luna ? 'luna' : 'sol');
+      try{ localStorage.setItem('pochi_modo', luna ? 'luna' : 'sol'); }catch(e){}
+      paintModeBtn();
+    });
+  }
+
+  /* ---------- botones: el clic deja marcado el color un momento ---------- */
+  document.addEventListener('click', function(e){
+    var b = e.target.closest ? e.target.closest('.btn') : null;
+    if(!b){ return; }
+    b.classList.add('pressed');
+    setTimeout(function(){ b.classList.remove('pressed'); }, 450);
+  }, true);
+
+  /* ---------- menú móvil ---------- */
+  var toggle = document.getElementById('navToggle');
+  var links = document.getElementById('navLinks');
+  function closeMenu(){
+    if(links){ links.classList.remove('open'); }
+    if(toggle){ toggle.setAttribute('aria-expanded','false'); }
+  }
+  if(toggle && links){
+    toggle.addEventListener('click', function(){
+      var open = links.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ closeMenu(); } });
+  }
+
+  /* ---------- header: grande arriba, se encoge al bajar ---------- */
+  var hdr = document.querySelector('header.site');
+  if(hdr){
+    var setHdr = function(){
+      var y = window.pageYOffset || 0;
+      if(y > 24){ hdr.classList.add('compact'); } else if(y < 8){ hdr.classList.remove('compact'); }
+    };
+    window.addEventListener('scroll', setHdr, { passive:true });
+    setHdr();
+  }
+
+  /* ---------- logo del header ----------
+     Lleva al inicio y reproduce la pantalla de carga de los ojos.
+     Los demás enlaces navegan normal, sin animación. */
+  document.addEventListener('click', function(e){
+    if(e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey){ return; }
+    var a = e.target.closest ? e.target.closest('a[data-intro]') : null;
+    if(!a){ return; }
+    closeMenu();
+    if(typeof window.pochiIntro === 'function'){
+      e.preventDefault();
+      window.pochiIntro(); // ya estamos en el inicio: se reproduce aquí mismo
+    } else {
+      try{ sessionStorage.setItem('pochi_intro','1'); }catch(err){}
+    }
+  });
+
+  /* ---------- animación al hacer scroll ----------
+     Cada bloque .reveal aparece deslizándose hacia arriba al entrar en
+     la pantalla. Los que entran juntos salen uno tras otro. Si un
+     bloque vuelve a quedar por debajo de la pantalla, se "rearma" para
+     repetir la animación la próxima vez que se baje. */
+  var root = document.documentElement;
+  function startReveal(){
+    var items = [].slice.call(document.querySelectorAll('.reveal'));
+    if(!items.length){ return; }
+    if(!('IntersectionObserver' in window)){
+      items.forEach(function(el){ el.classList.add('in'); });
+      return;
+    }
+    /* de dónde entra cada bloque: los títulos desde la izquierda, lo que
+       ocupa media pantalla desde su lado, la línea del colegio desde
+       arriba y lo ancho desde abajo. Se puede forzar con data-from. */
+    var vw = window.innerWidth || 1;
+    items.forEach(function(el){
+      if(el.hasAttribute('data-from')){ return; }
+      var r = el.getBoundingClientRect(), from = 'bottom';
+      if(el.querySelector('.eyebrow, h1') && !el.classList.contains('card')){ from = 'left'; }
+      else if(el.classList.contains('school') || el.classList.contains('team-cta')){ from = 'top'; }
+      else if(r.width > 0 && r.width < vw * 0.6){ from = (r.left + r.width / 2) < vw / 2 ? 'left' : 'right'; }
+      el.setAttribute('data-from', from);
+    });
+    var io = new IntersectionObserver(function(entries){
+      var entering = [];
+      entries.forEach(function(en){
+        if(en.isIntersecting){ entering.push(en); }
+        else if(en.boundingClientRect.top > (en.rootBounds ? en.rootBounds.bottom : window.innerHeight)){
+          en.target.classList.remove('in'); // quedó abajo: se repetirá al volver
+        }
+      });
+      entering.sort(function(x, y){ return (x.boundingClientRect.top - y.boundingClientRect.top) || (x.boundingClientRect.left - y.boundingClientRect.left); });
+      entering.forEach(function(en, i){
+        if(en.target.classList.contains('in')){ return; }
+        en.target.style.setProperty('--rd', Math.min(i * 0.12, 0.6).toFixed(2) + 's');
+        en.target.classList.add('in');
+      });
+    }, { threshold:0.08, rootMargin:'0px 0px -6% 0px' });
+    items.forEach(function(el){ io.observe(el); });
+  }
+  if(root.classList.contains('play-intro')){
+    window.addEventListener('pochi:intro-fin', startReveal, { once:true });
+  } else {
+    startReveal();
+  }
+
+  /* ---------- reproductores de video (azul y blanco) ----------
+     <div class="player" data-src="Recursos/video.mp4" data-title="..."></div>
+     Si el archivo todavía no está en Recursos/, se muestra cuál falta. */
+  var ICON_PLAY = '<svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>';
+  var ICON_PAUSE = '<svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
+  var ICON_FULL = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5v2H6v3zm10-5h6v5h-2V6h-4zM4 15h2v3h3v2H4zm14 3v-3h2v5h-5v-2z"/></svg>';
+  function fmt(s){ if(!isFinite(s)){ s = 0; } var m = Math.floor(s / 60), r = Math.floor(s % 60); return m + ':' + (r < 10 ? '0' : '') + r; }
+
+  [].forEach.call(document.querySelectorAll('.player'), function(p){
+    var src = p.getAttribute('data-src') || '';
+    var poster = p.getAttribute('data-poster') || '';
+    var title = p.getAttribute('data-title') || 'Video';
+    p.innerHTML =
+      '<video playsinline preload="metadata"></video>' +
+      '<button class="p-big" type="button" aria-label="Reproducir: ' + title + '">' + ICON_PLAY + '</button>' +
+      '<div class="p-bar">' +
+        '<button class="p-play" type="button" aria-label="Reproducir o pausar">' + ICON_PLAY + ICON_PAUSE + '</button>' +
+        '<div class="p-track" role="slider" tabindex="0" aria-label="Progreso del video" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div>' +
+        '<span class="p-time">0:00 / 0:00</span>' +
+        '<button class="p-full" type="button" aria-label="Pantalla completa">' + ICON_FULL + '</button>' +
+      '</div>' +
+      '<div class="p-missing"><div class="eyes eyes-md"><span class="eye"><i></i></span><span class="eye"><i></i></span></div>' +
+        '<strong>' + title + '</strong><span>Video pendiente, va en:</span><code>' + (src || 'Recursos/…') + '</code></div>';
+
+    var v = p.querySelector('video');
+    var fill = p.querySelector('.p-track i');
+    var track = p.querySelector('.p-track');
+    var time = p.querySelector('.p-time');
+    var markMissing = function(){ p.classList.add('missing'); };
+
+    if(!src){ markMissing(); return; }
+    if(poster){ v.setAttribute('poster', poster); }
+    var source = document.createElement('source');
+    source.src = src;
+    source.addEventListener('error', markMissing);
+    v.addEventListener('error', markMissing);
+    v.appendChild(source);
+
+    var toggle = function(){
+      if(v.paused){ var pr = v.play(); if(pr && pr.catch){ pr.catch(function(){}); } }
+      else { v.pause(); }
+    };
+    p.querySelector('.p-big').addEventListener('click', toggle);
+    p.querySelector('.p-play').addEventListener('click', toggle);
+    v.addEventListener('click', toggle);
+    v.addEventListener('play', function(){ p.classList.add('playing'); });
+    v.addEventListener('pause', function(){ p.classList.remove('playing'); });
+    v.addEventListener('ended', function(){ p.classList.remove('playing'); });
+    var paint = function(){
+      var pct = v.duration ? (v.currentTime / v.duration) * 100 : 0;
+      fill.style.width = pct + '%';
+      track.setAttribute('aria-valuenow', Math.round(pct));
+      time.textContent = fmt(v.currentTime) + ' / ' + fmt(v.duration);
+    };
+    v.addEventListener('timeupdate', paint);
+    v.addEventListener('loadedmetadata', paint);
+    track.addEventListener('click', function(e){
+      var r = track.getBoundingClientRect();
+      if(v.duration){ v.currentTime = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * v.duration; }
+    });
+    track.addEventListener('keydown', function(e){
+      if(!v.duration){ return; }
+      if(e.key === 'ArrowRight'){ v.currentTime = Math.min(v.duration, v.currentTime + 5); e.preventDefault(); }
+      if(e.key === 'ArrowLeft'){ v.currentTime = Math.max(0, v.currentTime - 5); e.preventDefault(); }
+    });
+    p.querySelector('.p-full').addEventListener('click', function(){
+      try{
+        var req = p.requestFullscreen || p.webkitRequestFullscreen;
+        if(req){ var r = req.call(p); if(r && r.catch){ r.catch(function(){ if(v.webkitEnterFullscreen){ v.webkitEnterFullscreen(); } }); } }
+        else if(v.webkitEnterFullscreen){ v.webkitEnterFullscreen(); }
+      }catch(err){}
+    });
+  });
+})();
+
+</script>
+<script>
+/* ==================================================================
+   MOTOR DEL LABERINTO DE POCHI
+   - Laberintos generados con semilla fija: cada nivel siempre es el
+     mismo y siempre tiene solución. La pulsera se coloca en la celda
+     más lejana a la salida.
+   - Tocar una pared = "¡Te chocaste!" y se repite el nivel.
+   - Medidor de señal (RSSI) como en la vida real: entre más cerca de
+     la pulsera, más barras y menos dBm negativos.
+   - Niveles con "niebla": solo se ve lo que alcanza el LiDAR.
+   Uso: PochiMaze(elementoRaíz, { levels:[...], demo:true|false })
+   ================================================================== */
+window.PochiMaze = function(root, opts){
+  'use strict';
+  var canvas = root.querySelector('.g-canvas');
+  if(!canvas || !canvas.getContext){ return; }
+  var ctx = canvas.getContext('2d');
+  var LEVELS = opts.levels;
+  var DEMO = !!opts.demo;
+  var CS = 36;                                   // tamaño de cada celda (unidades internas)
+  var R = CS * 0.26;                             // radio de choque de Pochi
+  var DPR = Math.min(2, window.devicePixelRatio || 1);
+  var BEST_KEY = 'pochi_mejor_tiempo';
+  var reduceMotion = false; // las animaciones se muestran siempre
+
+  var q = function(s){ return root.querySelector(s); };
+  var ui = {
+    level: q('[data-g="level"]'), time: q('[data-g="time"]'), best: q('[data-g="best"]'),
+    bars: q('.sig-bars'), barItems: [].slice.call(root.querySelectorAll('.sig-bars i')),
+    dbm: q('.sig-dbm'), msg: q('.g-msg'), modal: q('.g-modal'),
+    pips: [].slice.call(root.querySelectorAll('.g-pips i'))
+  };
+
+  var st = { li:0, grid:null, cols:0, rows:0, start:null, goal:null, p:{x:0,y:0},
+             running:false, keys:{}, ptr:null, time:0, last:0, t:0, lastBars:-1 };
+
+  /* ---------- generación del laberinto ---------- */
+  function rng(a){
+    return function(){
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      var t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  function makeMaze(c, r, seed, loops){
+    var rand = rng(seed), g = [], x, y, i;
+    for(y = 0; y < r; y++){ g.push([]); for(x = 0; x < c; x++){ g[y].push(1); } }
+    var stack = [[1,1]]; g[1][1] = 0;
+    while(stack.length){
+      var cur = stack[stack.length - 1];
+      var dirs = [[2,0],[-2,0],[0,2],[0,-2]];
+      for(i = 3; i > 0; i--){ var j = Math.floor(rand() * (i + 1)); var tmp = dirs[i]; dirs[i] = dirs[j]; dirs[j] = tmp; }
+      var moved = false;
+      for(i = 0; i < 4; i++){
+        var nx = cur[0] + dirs[i][0], ny = cur[1] + dirs[i][1];
+        if(nx > 0 && ny > 0 && nx < c - 1 && ny < r - 1 && g[ny][nx] === 1){
+          g[cur[1] + dirs[i][1] / 2][cur[0] + dirs[i][0] / 2] = 0;
+          g[ny][nx] = 0; stack.push([nx, ny]); moved = true; break;
+        }
+      }
+      if(!moved){ stack.pop(); }
+    }
+    // algunos atajos extra: hacen el laberinto más engañoso (varios caminos)
+    var made = 0, tries = 0;
+    while(made < (loops || 0) && tries < 800){
+      tries++;
+      x = 1 + Math.floor(rand() * (c - 2)); y = 1 + Math.floor(rand() * (r - 2));
+      if(g[y][x] !== 1){ continue; }
+      var horiz = g[y][x-1] === 0 && g[y][x+1] === 0 && g[y-1][x] === 1 && g[y+1][x] === 1;
+      var vert  = g[y-1][x] === 0 && g[y+1][x] === 0 && g[y][x-1] === 1 && g[y][x+1] === 1;
+      if(horiz || vert){ g[y][x] = 0; made++; }
+    }
+    return g;
+  }
+  function farthestCell(g, c, r){
+    var dist = [], y, x, queue = [[1,1]], head = 0, best = [1,1];
+    for(y = 0; y < r; y++){ dist.push([]); for(x = 0; x < c; x++){ dist[y].push(-1); } }
+    dist[1][1] = 0;
+    while(head < queue.length){
+      var cur = queue[head++];
+      if(dist[cur[1]][cur[0]] > dist[best[1]][best[0]]){ best = cur; }
+      var n = [[1,0],[-1,0],[0,1],[0,-1]];
+      for(var i = 0; i < 4; i++){
+        var nx = cur[0] + n[i][0], ny = cur[1] + n[i][1];
+        if(g[ny][nx] === 0 && dist[ny][nx] < 0){ dist[ny][nx] = dist[cur[1]][cur[0]] + 1; queue.push([nx, ny]); }
+      }
+    }
+    return best;
+  }
+
+  /* ---------- niveles ---------- */
+  function setLevel(i){
+    st.li = i;
+    var L = LEVELS[i];
+    st.cols = L.cols; st.rows = L.rows;
+    st.grid = makeMaze(L.cols, L.rows, L.seed, L.loops);
+    var f = farthestCell(st.grid, L.cols, L.rows);
+    st.start = { x:1.5 * CS, y:1.5 * CS };
+    st.goal = { x:(f[0] + .5) * CS, y:(f[1] + .5) * CS };
+    canvas.width = Math.round(L.cols * CS * DPR);
+    canvas.height = Math.round(L.rows * CS * DPR);
+    canvas.style.aspectRatio = L.cols + ' / ' + L.rows;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    resetPos();
+    if(ui.level){ ui.level.textContent = (i + 1) + ' / ' + LEVELS.length; }
+    ui.pips.forEach(function(p, k){ p.classList.toggle('done', k < i); p.classList.toggle('cur', k === i); });
+    say(L.hint);
+    draw();
+  }
+  function resetPos(){
+    st.p = { x:st.start.x, y:st.start.y };
+    st.keys = {}; st.ptr = null;
+    [].forEach.call(root.querySelectorAll('.dpad .on'), function(b){ b.classList.remove('on'); });
+  }
+  function say(html){ if(ui.msg){ ui.msg.innerHTML = html; } }
+
+  /* ---------- choque con paredes ---------- */
+  function hitsWall(x, y){
+    var r = R * .92;
+    var x0 = Math.floor((x - r) / CS), x1 = Math.floor((x + r) / CS);
+    var y0 = Math.floor((y - r) / CS), y1 = Math.floor((y + r) / CS);
+    for(var cy = y0; cy <= y1; cy++){
+      for(var cx = x0; cx <= x1; cx++){
+        if(cy < 0 || cx < 0 || cy >= st.rows || cx >= st.cols){ return true; }
+        if(st.grid[cy][cx] === 1){
+          var nx = Math.max(cx * CS, Math.min(x, (cx + 1) * CS));
+          var ny = Math.max(cy * CS, Math.min(y, (cy + 1) * CS));
+          if((x - nx) * (x - nx) + (y - ny) * (y - ny) < r * r){ return true; }
+        }
+      }
+    }
+    return false;
+  }
+
+  /* ---------- dibujo ---------- */
+  function rr(x, y, w, h, r){
+    ctx.beginPath();
+    if(ctx.roundRect){ ctx.roundRect(x, y, w, h, r); } else { ctx.rect(x, y, w, h); }
+  }
+  function drawBracelet(x, y){
+    var s = CS / 36, i;
+    for(i = 0; i < 3; i++){
+      var ph = ((st.t * .7) + i / 3) % 1;
+      ctx.strokeStyle = 'rgba(21,101,192,' + (0.55 * (1 - ph)).toFixed(3) + ')';
+      ctx.lineWidth = 2 * s;
+      ctx.beginPath(); ctx.arc(x, y, (8 + ph * 22) * s, 0, Math.PI * 2); ctx.stroke();
+    }
+    ctx.fillStyle = '#232a3a'; rr(x - 5 * s, y - 14 * s, 10 * s, 28 * s, 3 * s); ctx.fill();
+    ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#b9c6da'; ctx.lineWidth = 1.2 * s;
+    rr(x - 9 * s, y - 9 * s, 18 * s, 18 * s, 4.5 * s); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#151a24'; rr(x - 6 * s, y - 6.5 * s, 12 * s, 13 * s, 2.5 * s); ctx.fill();
+    ctx.fillStyle = '#ff7a2f';
+    for(i = 0; i < 3; i++){ ctx.fillRect(x - 3.2 * s, y - 4 * s + i * 3 * s, 6.4 * s, 1.9 * s); }
+  }
+  function drawPochi(x, y){
+    var r = R * 1.2;
+    ctx.fillStyle = 'rgba(20,33,61,.2)';
+    ctx.beginPath(); ctx.ellipse(x + r * .12, y + r * .2, r, r * .95, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#9fb0cb'; ctx.lineWidth = 1.6;
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#0e1424'; rr(x - r * .74, y - r * .48, r * 1.48, r * .9, r * .26); ctx.fill();
+    var blink = (st.t % 3.4) > 3.22 ? .15 : 1;
+    var er = r * .22;
+    [-1, 1].forEach(function(side){
+      var ex = x + side * r * .34, ey = y - r * .03;
+      ctx.fillStyle = '#00e5d1';
+      ctx.beginPath(); ctx.ellipse(ex, ey, er, er * blink, 0, 0, Math.PI * 2); ctx.fill();
+      if(blink === 1){ ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(ex + er * .35, ey - er * .38, er * .3, 0, Math.PI * 2); ctx.fill(); }
+    });
+  }
+  function draw(){
+    var W = st.cols * CS, H = st.rows * CS, x, y, g = st.grid;
+    ctx.fillStyle = '#f7f4ee'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = 'rgba(20,33,61,.045)';
+    for(y = 0; y < st.rows; y++){ for(x = 0; x < st.cols; x++){ if(g[y][x] === 0 && (x + y) % 2 === 0){ ctx.fillRect(x * CS, y * CS, CS, CS); } } }
+    // salida
+    ctx.fillStyle = 'rgba(21,101,192,.16)'; rr(st.start.x - CS * .38, st.start.y - CS * .38, CS * .76, CS * .76, CS * .18); ctx.fill();
+    // paredes
+    for(y = 0; y < st.rows; y++){
+      for(x = 0; x < st.cols; x++){
+        if(g[y][x] === 1){
+          ctx.fillStyle = '#16213e'; ctx.fillRect(x * CS - .5, y * CS - .5, CS + 1, CS + 1);
+          if(y + 1 < st.rows && g[y + 1][x] === 0){ ctx.fillStyle = '#2a3d6e'; ctx.fillRect(x * CS, (y + 1) * CS - 4, CS, 4); }
+        }
+      }
+    }
+    drawBracelet(st.goal.x, st.goal.y);
+    drawPochi(st.p.x, st.p.y);
+    // niebla: Pochi solo "ve" hasta donde llega su LiDAR
+    var L = LEVELS[st.li];
+    if(L.fog){
+      var fr = L.fog * CS;
+      var gr = ctx.createRadialGradient(st.p.x, st.p.y, fr * .45, st.p.x, st.p.y, fr);
+      gr.addColorStop(0, 'rgba(14,22,44,0)');
+      gr.addColorStop(1, 'rgba(14,22,44,1)');
+      ctx.fillStyle = gr; ctx.fillRect(0, 0, W, H);
+      ctx.strokeStyle = 'rgba(0,229,209,.35)'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 6]);
+      ctx.beginPath(); ctx.arc(st.p.x, st.p.y, fr * .72, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
+    }
+    paintSignal();
+  }
+
+  /* ---------- medidor de señal (RSSI) ---------- */
+  function paintSignal(){
+    var d = Math.hypot(st.p.x - st.goal.x, st.p.y - st.goal.y);
+    var max = Math.hypot(st.cols, st.rows) * CS;
+    var s = Math.max(0, Math.min(1, 1 - d / (max * .8)));
+    s = Math.pow(s, 1.5);
+    var bars = Math.max(1, Math.ceil(s * 5));
+    var dbm = Math.round(-95 + s * 57);
+    if(ui.dbm){ ui.dbm.textContent = dbm + ' dBm'; }
+    if(bars !== st.lastBars && ui.bars){
+      st.lastBars = bars;
+      ui.barItems.forEach(function(b, k){ b.classList.toggle('on', k < bars); });
+      ui.bars.className = 'sig-bars ' + (bars <= 2 ? 'weak' : bars <= 3 ? 'mid' : 'strong');
+    }
+  }
+  function paintTime(){ if(ui.time){ ui.time.textContent = st.time.toFixed(1) + ' s'; } }
+  function loadBest(){ try{ var v = parseFloat(localStorage.getItem(BEST_KEY)); return isFinite(v) ? v : null; }catch(e){ return null; } }
+  function paintBest(){ if(ui.best){ var b = loadBest(); ui.best.textContent = b ? b.toFixed(1) + ' s' : '—'; } }
+
+  /* ---------- ciclo del juego ---------- */
+  function loop(ts){
+    if(!st.running){ return; }
+    var dt = st.last ? Math.min(.05, (ts - st.last) / 1000) : 0;
+    st.last = ts; st.t += dt; st.time += dt;
+    var L = LEVELS[st.li];
+    var speed = (L.speed || 3.2) * CS;
+    var vx = 0, vy = 0, k = st.keys;
+    if(k.left){ vx -= 1; } if(k.right){ vx += 1; } if(k.up){ vy -= 1; } if(k.down){ vy += 1; }
+    var step = speed * dt;
+    if(!vx && !vy && st.ptr){
+      var dx = st.ptr.x - st.p.x, dy = st.ptr.y - st.p.y, dl = Math.hypot(dx, dy);
+      if(dl > 2){ vx = dx / dl; vy = dy / dl; step = Math.min(step, dl); }
+    }
+    var len = Math.hypot(vx, vy);
+    if(len > 0 && step > 0){
+      vx /= len; vy /= len;
+      var n = Math.max(1, Math.ceil(step / (CS * .12)));
+      for(var i = 0; i < n; i++){
+        var nx = st.p.x + vx * step / n, ny = st.p.y + vy * step / n;
+        st.p.x = nx; st.p.y = ny;
+        if(hitsWall(nx, ny)){ draw(); paintTime(); crash(); return; }
+      }
+    }
+    if(Math.hypot(st.p.x - st.goal.x, st.p.y - st.goal.y) < CS * .42){ draw(); paintTime(); win(); return; }
+    draw(); paintTime();
+    requestAnimationFrame(loop);
+  }
+  function go(){
+    hideModal();
+    st.running = true; st.last = 0;
+    requestAnimationFrame(loop);
+  }
+  function stop(){ st.running = false; st.keys = {}; st.ptr = null; }
+
+  /* ---------- ventanas ---------- */
+  var EYES = '<div class="eyes eyes-md"><span class="eye"><i></i></span><span class="eye"><i></i></span></div>';
+  var EYES_CLOSED = '<div class="eyes eyes-md closed"><span class="eye"><i></i></span><span class="eye"><i></i></span></div>';
+  function showModal(o){
+    ui.modal.innerHTML = '<div class="g-card ' + (o.cls || '') + '" role="dialog" aria-modal="true" aria-label="' + o.title.replace(/"/g,'') + '">' +
+      (o.closed ? EYES_CLOSED : EYES) + '<h3>' + o.title + '</h3><p>' + o.text + '</p><div class="btns"></div></div>';
+    var box = ui.modal.querySelector('.btns');
+    o.buttons.forEach(function(b){
+      var el;
+      if(b.href){ el = document.createElement('a'); el.href = b.href; }
+      else { el = document.createElement('button'); el.type = 'button'; el.addEventListener('click', b.onClick); }
+      el.className = 'btn ' + (b.primary ? 'btn-primary' : 'btn-ghost');
+      el.textContent = b.label;
+      box.appendChild(el);
+    });
+    ui.modal.hidden = false;
+    var first = box.querySelector('.btn');
+    if(first && o.focus !== false){ try{ first.focus({ preventScroll:true }); }catch(e){ first.focus(); } }
+  }
+  function hideModal(){ ui.modal.hidden = true; ui.modal.innerHTML = ''; }
+
+  function crash(){
+    stop();
+    if(!reduceMotion){ root.classList.remove('g-shake'); void root.offsetWidth; root.classList.add('g-shake'); }
+    showModal({
+      cls:'crash', closed:true, title:'¡Te chocaste!',
+      text:'Pochi tocó una pared. En la vida real su LiDAR lo frena antes de chocar; aquí tú eres su LiDAR.',
+      buttons:[{ label:'Repetir nivel', primary:true, onClick:function(){ resetPos(); draw(); go(); } }]
+    });
+  }
+  function win(){
+    stop();
+    var L = LEVELS[st.li];
+    if(DEMO){
+      showModal({
+        cls:'win', title:'¡Lo lograste!',
+        text:'Pochi encontró la pulsera en ' + st.time.toFixed(1) + ' s. El juego completo tiene 5 niveles, laberintos más grandes y zonas donde solo ves lo que alcanza el LiDAR.',
+        buttons:[
+          { label:'Jugar otra vez', onClick:function(){ st.time = 0; paintTime(); setLevel(0); go(); } },
+          { label:'Juego completo', primary:true, href:'juego.html' }
+        ]
+      });
+      return;
+    }
+    if(st.li < LEVELS.length - 1){
+      var next = LEVELS[st.li + 1];
+      showModal({
+        cls:'win', title:'¡Nivel ' + (st.li + 1) + ' superado!',
+        text:'Pochi llegó a la pulsera. Siguiente: ' + next.name + '.',
+        buttons:[{ label:'Siguiente nivel', primary:true, onClick:function(){ setLevel(st.li + 1); go(); } }]
+      });
+      return;
+    }
+    celebrate();
+  }
+
+  /* ---------- celebración final ---------- */
+  function celebrate(){
+    var c = document.getElementById('celebrate');
+    var total = st.time, prev = loadBest(), isBest = prev === null || total < prev;
+    if(isBest){ try{ localStorage.setItem(BEST_KEY, String(total)); }catch(e){} }
+    paintBest();
+    if(!c){ return; }
+    c.querySelector('[data-c="time"]').textContent = total.toFixed(1) + ' s';
+    c.querySelector('[data-c="best"]').textContent = isBest ? '¡Nuevo mejor tiempo!' : 'Tu mejor tiempo: ' + prev.toFixed(1) + ' s';
+    c.hidden = false;
+    c.classList.remove('go'); void c.offsetWidth; c.classList.add('go');
+    try{ root.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block:'center' }); }catch(e){}
+    var again = c.querySelector('[data-c="again"]');
+    again.onclick = function(){ c.hidden = true; confettiStop(); st.time = 0; paintTime(); setLevel(0); go(); };
+    try{ again.focus({ preventScroll:true }); }catch(e){}
+    if(!reduceMotion){ confetti(c.querySelector('canvas')); }
+  }
+  var confettiRaf = 0;
+  function confettiStop(){ cancelAnimationFrame(confettiRaf); confettiRaf = 0; }
+  function confetti(cv){
+    confettiStop();
+    var cx = cv.getContext('2d'), w, h, dpr = DPR;
+    var box = cv.parentNode.getBoundingClientRect(); // el confeti cae dentro del juego
+    w = cv.width = Math.round(box.width * dpr);
+    h = cv.height = Math.round(box.height * dpr);
+    var colors = ['#1565c0','#4fb3f6','#00e5d1','#f7c531','#e53935','#ff7a2f','#16213e'];
+    var parts = [];
+    for(var i = 0; i < 140; i++){
+      parts.push({
+        x: Math.random() * w, y: -Math.random() * h * .7 - 20 * dpr,
+        vx: (Math.random() - .5) * 3 * dpr, vy: (2 + Math.random() * 3.5) * dpr,
+        r: (5 + Math.random() * 7) * dpr, a: Math.random() * 6.28, va: (Math.random() - .5) * .3,
+        c: colors[i % colors.length], shape: i % 3, wob: Math.random() * 6.28
+      });
+    }
+    var t0 = performance.now();
+    function frame(ts){
+      var el = ts - t0, alive = false;
+      cx.clearRect(0, 0, w, h);
+      for(var k = 0; k < parts.length; k++){
+        var p = parts[k];
+        p.vy += .045 * dpr; p.x += p.vx + Math.sin(ts / 500 + p.wob) * .7 * dpr; p.y += p.vy; p.a += p.va;
+        if(p.y < h + 30){ alive = true; }
+        cx.save(); cx.translate(p.x, p.y); cx.rotate(p.a); cx.fillStyle = p.c;
+        if(p.shape === 0){ cx.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2); }
+        else if(p.shape === 1){ cx.beginPath(); cx.arc(0, 0, p.r / 2.4, 0, 6.283); cx.fill(); }
+        else { cx.fillRect(-p.r / 3, -p.r / 2, p.r / 1.5, p.r); }
+        cx.restore();
+      }
+      if(alive && el < 8000){ confettiRaf = requestAnimationFrame(frame); } else { cx.clearRect(0, 0, w, h); }
+    }
+    confettiRaf = requestAnimationFrame(frame);
+  }
+
+  /* ---------- controles ---------- */
+  var KEYS = { ArrowUp:'up', ArrowDown:'down', ArrowLeft:'left', ArrowRight:'right', w:'up', W:'up', s:'down', S:'down', a:'left', A:'left', d:'right', D:'right' };
+  window.addEventListener('keydown', function(e){
+    var k = KEYS[e.key];
+    if(!k || !st.running){ return; }       // solo captura teclas mientras se juega
+    e.preventDefault(); st.keys[k] = true;
+  });
+  window.addEventListener('keyup', function(e){ var k = KEYS[e.key]; if(k){ st.keys[k] = false; } });
+  window.addEventListener('blur', function(){ st.keys = {}; st.ptr = null; });
+
+  function toCanvas(e){
+    var r = canvas.getBoundingClientRect();
+    return { x:(e.clientX - r.left) * (st.cols * CS / r.width), y:(e.clientY - r.top) * (st.rows * CS / r.height) };
+  }
+  canvas.addEventListener('pointerdown', function(e){
+    if(!st.running){ return; }
+    e.preventDefault();
+    st.ptr = toCanvas(e);
+    try{ canvas.setPointerCapture(e.pointerId); }catch(err){}
+  });
+  canvas.addEventListener('pointermove', function(e){ if(st.ptr){ st.ptr = toCanvas(e); } });
+  ['pointerup','pointercancel','lostpointercapture'].forEach(function(ev){ canvas.addEventListener(ev, function(){ st.ptr = null; }); });
+
+  [].forEach.call(root.querySelectorAll('.dpad [data-dir]'), function(b){
+    var dir = b.getAttribute('data-dir');
+    var on = function(e){ e.preventDefault(); st.keys[dir] = true; b.classList.add('on'); try{ b.setPointerCapture(e.pointerId); }catch(err){} };
+    var off = function(){ st.keys[dir] = false; b.classList.remove('on'); };
+    b.addEventListener('pointerdown', on);
+    b.addEventListener('pointerup', off);
+    b.addEventListener('pointercancel', off);
+    b.addEventListener('lostpointercapture', off);
+    b.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+  });
+
+  /* ---------- arranque ---------- */
+  root.__pochi = { st:st, setLevel:setLevel, CS:CS }; // acceso para pruebas desde la consola
+  paintBest(); paintTime();
+  setLevel(0);
+  showModal({
+    focus:false,
+    title: DEMO ? 'Guía a Pochi hasta la pulsera' : '5 niveles. Sin tocar las paredes.',
+    text: DEMO
+      ? 'Muévete con las flechas, con WASD o arrastrando el dedo sobre el laberinto. Si tocas una pared, repites.'
+      : 'Cada nivel es más grande. En los niveles 4 y 5 hay niebla: solo verás lo que alcanza el LiDAR de Pochi y tendrás que guiarte por la señal.',
+    buttons:[{ label: DEMO ? 'Empezar' : 'Empezar nivel 1', primary:true, onClick:go }]
+  });
+};
+
+PochiMaze(document.getElementById('demoGame'), { demo:true, levels:[{ name:'Nivel 1', cols:13, rows:9, seed:7, loops:0, speed:3.0, hint:'Nivel 1: lleva a Pochi hasta la pulsera. Las barras de señal suben cuando te acercas a la pulsera.' }] });
+</script>
+<script>
+/* Pantalla de carga: 1.5 s. Los ojos parpadean cambiando entre los dos
+   "cuadros" de la pantalla real (abiertos / línea) y la barra se llena
+   por tramos, como una carga de verdad. Queda marcada como vista
+   durante esta visita; el logo del header la vuelve a reproducir. */
+(function(){
+  'use strict';
+  var intro = document.getElementById('intro');
+  if(!intro){ return; }
+  var root = document.documentElement;
+  var eyes = document.getElementById('introEyes');
+  var fill = document.getElementById('introFill');
+  var DURATION = 1500;
+  var BLINKS = [[330, 140], [880, 130]];            // [inicio, duración] de cada parpadeo (ms)
+  var STEPS = [[0,0],[180,14],[360,22],[620,58],[820,64],[1080,86],[1250,93],[1380,100]]; // [ms, %]
+  var timers = [], raf = 0, t0 = 0;
+
+  function clearAll(){ timers.forEach(clearTimeout); timers = []; cancelAnimationFrame(raf); }
+  function progress(t){
+    for(var i = 1; i < STEPS.length; i++){
+      if(t <= STEPS[i][0]){
+        var a = STEPS[i-1], b = STEPS[i], k = (t - a[0]) / (b[0] - a[0]);
+        k = k * k * (3 - 2 * k); // suave dentro de cada tramo
+        return a[1] + (b[1] - a[1]) * k;
+      }
+    }
+    return 100;
+  }
+  function tick(now){
+    var t = now - t0;
+    fill.style.width = progress(t).toFixed(2) + '%';
+    if(t < STEPS[STEPS.length - 1][0]){ raf = requestAnimationFrame(tick); }
+  }
+  function finish(){
+    clearAll();
+    fill.style.width = '100%';
+    intro.classList.add('hide');
+    try{ sessionStorage.setItem('pochi_intro_visto','1'); }catch(e){}
+    if(location.hash === '#intro'){
+      try{ history.replaceState(null, '', location.pathname + location.search); }catch(e){}
+    }
+    setTimeout(function(){
+      root.classList.remove('play-intro');
+      intro.classList.remove('run','hide');
+      eyes.classList.remove('closed');
+      try{ window.dispatchEvent(new Event('pochi:intro-fin')); }catch(e){}
+    }, 360);
+  }
+  function run(){
+    clearAll();
+    eyes.classList.remove('closed');
+    fill.style.width = '0%';
+    BLINKS.forEach(function(b){
+      timers.push(setTimeout(function(){ eyes.classList.add('closed'); }, b[0]));
+      timers.push(setTimeout(function(){ eyes.classList.remove('closed'); }, b[0] + b[1]));
+    });
+    t0 = performance.now();
+    raf = requestAnimationFrame(tick);
+    timers.push(setTimeout(finish, DURATION));
+  }
+  function start(){
+    root.classList.add('play-intro');
+    intro.classList.remove('hide');
+    intro.classList.add('run');
+    run();
+  }
+  window.pochiIntro = function(){ window.scrollTo(0, 0); start(); };
+  if(root.classList.contains('play-intro')){ run(); }
+})();
+
+</script>
+</body>
+</html>

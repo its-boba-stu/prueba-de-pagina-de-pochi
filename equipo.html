@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Equipo — Pochi</title>
+<script>
+/* Modo sol/luna guardado: se aplica antes de pintar para que no parpadee. */
+(function(){ var m = 'sol'; try{ m = localStorage.getItem('pochi_modo') || 'sol'; }catch(e){}
+  document.documentElement.setAttribute('data-modo', m === 'luna' ? 'luna' : 'sol');
+  document.documentElement.classList.add('js'); })();
+</script>
+<meta name="description" content="El equipo de estudiantes detrás de Pochi.">
+<meta name="theme-color" content="#0f2a5c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500;700&family=Lexend:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/comun.css">
+<link rel="stylesheet" href="css/equipo.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-row">
+    <a href="index.html#intro" class="brand" data-intro aria-label="Inicio: Colegio Capouilliez y Pochi">
+      <img src="Recursos/logo_header.png" alt="Colegio Capouilliez | Pochi" width="663" height="128">
+    </a>
+    <nav class="links" id="navLinks" aria-label="Principal"><a href="index.html">Inicio</a><a href="equipo.html" aria-current="page">Equipo</a><a href="juego.html">Juego</a><a href="prototipo.html">Prototipo</a></nav>
+    <div class="nav-tools">
+      <button class="mode-toggle" id="modeToggle" type="button" aria-pressed="false" aria-label="Cambiar a modo luna" title="Cambiar a modo luna">
+        <span class="knob" aria-hidden="true"></span>
+        <span class="ico sun" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.6"/><path d="M11 1h2v3.2h-2zM11 19.8h2V23h-2zM1 11h3.2v2H1zM19.8 11H23v2h-3.2zM4.1 5.5l1.4-1.4 2.3 2.3-1.4 1.4zM16.2 17.6l1.4-1.4 2.3 2.3-1.4 1.4zM4.1 18.5l2.3-2.3 1.4 1.4-2.3 2.3zM16.2 6.4l2.3-2.3 1.4 1.4-2.3 2.3z"/></svg></span>
+        <span class="ico moon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1z"/></svg></span>
+      </button>
+      <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navLinks" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+<main id="contenido">
+<div class="wrap">
+  <section class="page-head">
+    <div class="reveal">
+      <span class="eyebrow">El equipo</span>
+      <h1>21 estudiantes detrás de un robot completo.</h1>
+      <p class="lead">Pochi se construyó entre 21 estudiantes que se repartieron el trabajo real del proyecto: electrónica, programación, diseño del cuerpo, pruebas y la experiencia del paciente.</p>
+      <div class="team-stats"><span><b>21</b>integrantes</span><span><b>2</b>cerebros: Raspberry Pi 5 y ESP32</span><span><b>4</b>compartimentos de color</span></div>
+    </div>
+  </section>
+
+  <section class="section tight" style="padding-top:0" aria-label="Integrantes">
+    <div class="team-grid"><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_victor_arevalo.jpg" alt="Foto de Victor Arévalo" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_victor_arevalo.jpg</code></figcaption></figure><div><div class="member-name">Victor Arévalo</div><span class="member-role">Presidente</span></div></article><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_esteban_bobadilla.jpg" alt="Foto de Esteban Bobadilla" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_esteban_bobadilla.jpg</code></figcaption></figure><div><div class="member-name">Esteban Bobadilla</div><span class="member-role">Vicepresidente</span></div></article><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_jose_maldonado.jpg" alt="Foto de José Maldonado" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_jose_maldonado.jpg</code></figcaption></figure><div><div class="member-name">José Maldonado</div><span class="member-role">Tesorero</span></div></article><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_sussel_escobar.jpg" alt="Foto de Sussel Escobar" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_sussel_escobar.jpg</code></figcaption></figure><div><div class="member-name">Sussel Escobar</div><span class="member-role">Secretaria</span></div></article><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_julio_ordonez.jpg" alt="Foto de Julio Ordoñez" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_julio_ordonez.jpg</code></figcaption></figure><div><div class="member-name">Julio Ordoñez</div><span class="member-role">Diseñador</span></div></article><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_marcos_bobadilla.jpg" alt="Foto de Marcos Bobadilla" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_marcos_bobadilla.jpg</code></figcaption></figure><div><div class="member-name">Marcos Bobadilla</div><span class="member-role">Programador y electrónico</span></div></article><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_mario_lopez.jpg" alt="Foto de Mario López" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_mario_lopez.jpg</code></figcaption></figure><div><div class="member-name">Mario López</div><span class="member-role">Programador</span></div></article><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_abner_dubon.jpg" alt="Foto de Abner Dubón" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_abner_dubon.jpg</code></figcaption></figure><div><div class="member-name">Abner Dubón</div><span class="member-role">Programador</span></div></article><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_catherine_alvarez.jpg" alt="Foto de Catherine Alvarez" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_catherine_alvarez.jpg</code></figcaption></figure><div><div class="member-name">Catherine Alvarez</div><span class="member-role">Diseño, creatividad y mercadeo</span></div></article><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_daniel_ramos.jpg" alt="Foto de Daniel Ramos" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_daniel_ramos.jpg</code></figcaption></figure><div><div class="member-name">Daniel Ramos</div><span class="member-role">Ensamblaje</span></div></article><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_douglas_minchez.jpg" alt="Foto de Douglas Mínchez" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_douglas_minchez.jpg</code></figcaption></figure><div><div class="member-name">Douglas Mínchez</div><span class="member-role">Diseño y ensamblaje</span></div></article><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_esteban_padilla.jpg" alt="Foto de Esteban Padilla" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_esteban_padilla.jpg</code></figcaption></figure><div><div class="member-name">Esteban Padilla</div><span class="member-role">Ensamblaje</span></div></article><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_javier_padilla.jpg" alt="Foto de Javier Padilla" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_javier_padilla.jpg</code></figcaption></figure><div><div class="member-name">Javier Padilla</div><span class="member-role">Ensamblaje</span></div></article><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_juan_ignacio_roca.jpg" alt="Foto de Juan Ignacio Roca" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_juan_ignacio_roca.jpg</code></figcaption></figure><div><div class="member-name">Juan Ignacio Roca</div><span class="member-role">Ensamblaje</span></div></article><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_matias_coronado.jpg" alt="Foto de Matías Coronado" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_matias_coronado.jpg</code></figcaption></figure><div><div class="member-name">Matías Coronado</div><span class="member-role">Ensamblaje</span></div></article><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_miguel_garcia.jpg" alt="Foto de Miguel García" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_miguel_garcia.jpg</code></figcaption></figure><div><div class="member-name">Miguel García</div><span class="member-role">Ensamblaje</span></div></article><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_nelson_tzunun.jpg" alt="Foto de Nelson Tzunún" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_nelson_tzunun.jpg</code></figcaption></figure><div><div class="member-name">Nelson Tzunún</div><span class="member-role">Ensamblaje</span></div></article><article class="card member reveal"><figure class="media"><img src="Recursos/equipo_teresa_sandoval.jpg" alt="Foto de Teresa Sandoval" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing"><code>Recursos/equipo_teresa_sandoval.jpg</code></figcaption></figure><div><div class="member-name">Teresa Sandoval</div><span class="member-role">Diseño, creatividad y mercadeo</span></div></article><article class="card member reveal"><figure class="media avatar"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="24" r="12"/><path d="M10 58c0-12.2 9.8-20 22-20s22 7.8 22 20z"/></svg></figure><div><div class="member-name">Juan Esteban Rangel</div><span class="member-role">Cooperador</span></div></article><article class="card member reveal"><figure class="media avatar"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="24" r="12"/><path d="M10 58c0-12.2 9.8-20 22-20s22 7.8 22 20z"/></svg></figure><div><div class="member-name">Diego Urrutia</div><span class="member-role">Cooperador</span></div></article><article class="card member reveal"><figure class="media avatar"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="24" r="12"/><path d="M10 58c0-12.2 9.8-20 22-20s22 7.8 22 20z"/></svg></figure><div><div class="member-name">Luis Tzul</div><span class="member-role">Cooperador</span></div></article></div>
+  </section>
+
+  <section class="section tight" aria-labelledby="t-por-que">
+    <div class="card pad why reveal">
+      <span class="eyes eyes-md"><span class="eye"><i></i></span><span class="eye"><i></i></span></span>
+      <figure class="quote">
+        <span class="eyebrow" id="t-por-que">La frase que nos caracteriza</span>
+        <blockquote>“Ninguno de nosotros es tan inteligente como todos nosotros juntos.”</blockquote>
+        <figcaption>— Ken Blanchard</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section tight" aria-labelledby="t-colegio">
+    <div class="card pad school-card reveal">
+      <figure class="media "><img src="Recursos/logo_colegio.png" alt="Logo del Colegio Capouilliez" loading="lazy" onerror="this.parentNode.classList.add('missing')"><figcaption class="media-missing">Imagen pendiente<code>Recursos/logo_colegio.png</code></figcaption></figure>
+      <div>
+        <h2 id="t-colegio">Colegio Capouilliez</h2>
+        <p>Pochi fue desarrollado por estudiantes preuniversitarios del Colegio Capouilliez, en Guatemala, como proyecto de ingeniería.</p>
+        <a class="btn btn-ghost" href="https://www.capouilliez.edu.gt" target="_blank" rel="noopener">Visitar el sitio del colegio</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight" aria-label="Más sobre Pochi">
+    <div class="next-grid"><a class="card next-card reveal" href="index.html"><span class="kicker">Inicio</span><h3>Qué es Pochi</h3><p>El resumen del proyecto en un minuto.</p><span class="go">Ir al inicio →</span></a><a class="card next-card reveal" href="prototipo.html"><span class="kicker">Prototipo</span><h3>Cómo está construido</h3><p>Arquitectura, hardware, la interfaz real y los videos técnicos.</p><span class="go">Ver el prototipo →</span></a><a class="card next-card reveal" href="juego.html"><span class="kicker">Juego</span><h3>El reto completo: 5 laberintos</h3><p>Más grandes, más engañosos y con niebla en los últimos niveles.</p><span class="go">Jugar →</span></a></div>
+  </section>
+</div>
+</main>
+<footer class="site-foot">
+  <div class="foot-inner">
+    <div class="foot-brand">
+      <div class="row"><span class="eye-screen"><span class="eyes eyes-sm"><span class="eye"><i></i></span><span class="eye"><i></i></span></span></span>POCHI</div>
+      <p>Robot asistente de medicamentos para adultos mayores: busca, pregunta, entrega y confirma.</p>
+    </div>
+    <div class="foot-side">
+      <div class="foot-contact"><span class="foot-label">Contacto del equipo</span><span class="foot-mail pending"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v14H3zm2 2v.5l7 4.5 7-4.5V7zm0 2.9V17h14V9.9l-7 4.5z"/></svg><span>Correo por definir</span></span></div>
+      <nav class="foot-links" aria-label="Pie de página"><a href="index.html">Inicio</a><a href="equipo.html" aria-current="page">Equipo</a><a href="juego.html">Juego</a><a href="prototipo.html">Prototipo</a></nav>
+    </div>
+    <p class="foot-school">Proyecto desarrollado por estudiantes preuniversitarios del <a href="https://www.capouilliez.edu.gt" target="_blank" rel="noopener">Colegio Capouilliez</a>, Guatemala.</p>
+  </div>
+</footer>
+<script>
+/* ==================================================================
+   JS común de todas las páginas: modo sol/luna, menú móvil, header
+   que se encoge al bajar, botones que marcan el clic,
+   efecto de escala al hacer scroll y reproductores de video.
+   ================================================================== */
+(function(){
+  'use strict';
+  var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  /* ---------- modo sol / luna ----------
+     El modo se aplica antes de pintar (script en <head>); aquí solo se
+     cambia y se guarda para que se mantenga en todas las páginas. */
+  var modeBtn = document.getElementById('modeToggle');
+  function paintModeBtn(){
+    if(!modeBtn){ return; }
+    var luna = document.documentElement.getAttribute('data-modo') === 'luna';
+    modeBtn.setAttribute('aria-pressed', luna ? 'true' : 'false');
+    modeBtn.setAttribute('aria-label', luna ? 'Modo luna activo. Cambiar a modo sol' : 'Modo sol activo. Cambiar a modo luna');
+    modeBtn.setAttribute('title', luna ? 'Cambiar a modo sol' : 'Cambiar a modo luna');
+  }
+  if(modeBtn){
+    paintModeBtn();
+    modeBtn.addEventListener('click', function(){
+      var luna = document.documentElement.getAttribute('data-modo') !== 'luna';
+      document.documentElement.setAttribute('data-modo', luna ? 'luna' : 'sol');
+      try{ localStorage.setItem('pochi_modo', luna ? 'luna' : 'sol'); }catch(e){}
+      paintModeBtn();
+    });
+  }
+
+  /* ---------- botones: el clic deja marcado el color un momento ---------- */
+  document.addEventListener('click', function(e){
+    var b = e.target.closest ? e.target.closest('.btn') : null;
+    if(!b){ return; }
+    b.classList.add('pressed');
+    setTimeout(function(){ b.classList.remove('pressed'); }, 450);
+  }, true);
+
+  /* ---------- menú móvil ---------- */
+  var toggle = document.getElementById('navToggle');
+  var links = document.getElementById('navLinks');
+  function closeMenu(){
+    if(links){ links.classList.remove('open'); }
+    if(toggle){ toggle.setAttribute('aria-expanded','false'); }
+  }
+  if(toggle && links){
+    toggle.addEventListener('click', function(){
+      var open = links.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ closeMenu(); } });
+  }
+
+  /* ---------- header: grande arriba, se encoge al bajar ---------- */
+  var hdr = document.querySelector('header.site');
+  if(hdr){
+    var setHdr = function(){
+      var y = window.pageYOffset || 0;
+      if(y > 24){ hdr.classList.add('compact'); } else if(y < 8){ hdr.classList.remove('compact'); }
+    };
+    window.addEventListener('scroll', setHdr, { passive:true });
+    setHdr();
+  }
+
+  /* ---------- logo del header ----------
+     Lleva al inicio y reproduce la pantalla de carga de los ojos.
+     Los demás enlaces navegan normal, sin animación. */
+  document.addEventListener('click', function(e){
+    if(e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey){ return; }
+    var a = e.target.closest ? e.target.closest('a[data-intro]') : null;
+    if(!a){ return; }
+    closeMenu();
+    if(typeof window.pochiIntro === 'function'){
+      e.preventDefault();
+      window.pochiIntro(); // ya estamos en el inicio: se reproduce aquí mismo
+    } else {
+      try{ sessionStorage.setItem('pochi_intro','1'); }catch(err){}
+    }
+  });
+
+  /* ---------- animación al hacer scroll ----------
+     Cada bloque .reveal aparece deslizándose hacia arriba al entrar en
+     la pantalla. Los que entran juntos salen uno tras otro. Si un
+     bloque vuelve a quedar por debajo de la pantalla, se "rearma" para
+     repetir la animación la próxima vez que se baje. */
+  var root = document.documentElement;
+  function startReveal(){
+    var items = [].slice.call(document.querySelectorAll('.reveal'));
+    if(!items.length){ return; }
+    if(!('IntersectionObserver' in window)){
+      items.forEach(function(el){ el.classList.add('in'); });
+      return;
+    }
+    /* de dónde entra cada bloque: los títulos desde la izquierda, lo que
+       ocupa media pantalla desde su lado, la línea del colegio desde
+       arriba y lo ancho desde abajo. Se puede forzar con data-from. */
+    var vw = window.innerWidth || 1;
+    items.forEach(function(el){
+      if(el.hasAttribute('data-from')){ return; }
+      var r = el.getBoundingClientRect(), from = 'bottom';
+      if(el.querySelector('.eyebrow, h1') && !el.classList.contains('card')){ from = 'left'; }
+      else if(el.classList.contains('school') || el.classList.contains('team-cta')){ from = 'top'; }
+      else if(r.width > 0 && r.width < vw * 0.6){ from = (r.left + r.width / 2) < vw / 2 ? 'left' : 'right'; }
+      el.setAttribute('data-from', from);
+    });
+    var io = new IntersectionObserver(function(entries){
+      var entering = [];
+      entries.forEach(function(en){
+        if(en.isIntersecting){ entering.push(en); }
+        else if(en.boundingClientRect.top > (en.rootBounds ? en.rootBounds.bottom : window.innerHeight)){
+          en.target.classList.remove('in'); // quedó abajo: se repetirá al volver
+        }
+      });
+      entering.sort(function(x, y){ return (x.boundingClientRect.top - y.boundingClientRect.top) || (x.boundingClientRect.left - y.boundingClientRect.left); });
+      entering.forEach(function(en, i){
+        if(en.target.classList.contains('in')){ return; }
+        en.target.style.setProperty('--rd', Math.min(i * 0.12, 0.6).toFixed(2) + 's');
+        en.target.classList.add('in');
+      });
+    }, { threshold:0.08, rootMargin:'0px 0px -6% 0px' });
+    items.forEach(function(el){ io.observe(el); });
+  }
+  if(root.classList.contains('play-intro')){
+    window.addEventListener('pochi:intro-fin', startReveal, { once:true });
+  } else {
+    startReveal();
+  }
+
+  /* ---------- reproductores de video (azul y blanco) ----------
+     <div class="player" data-src="Recursos/video.mp4" data-title="..."></div>
+     Si el archivo todavía no está en Recursos/, se muestra cuál falta. */
+  var ICON_PLAY = '<svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>';
+  var ICON_PAUSE = '<svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
+  var ICON_FULL = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5v2H6v3zm10-5h6v5h-2V6h-4zM4 15h2v3h3v2H4zm14 3v-3h2v5h-5v-2z"/></svg>';
+  function fmt(s){ if(!isFinite(s)){ s = 0; } var m = Math.floor(s / 60), r = Math.floor(s % 60); return m + ':' + (r < 10 ? '0' : '') + r; }
+
+  [].forEach.call(document.querySelectorAll('.player'), function(p){
+    var src = p.getAttribute('data-src') || '';
+    var poster = p.getAttribute('data-poster') || '';
+    var title = p.getAttribute('data-title') || 'Video';
+    p.innerHTML =
+      '<video playsinline preload="metadata"></video>' +
+      '<button class="p-big" type="button" aria-label="Reproducir: ' + title + '">' + ICON_PLAY + '</button>' +
+      '<div class="p-bar">' +
+        '<button class="p-play" type="button" aria-label="Reproducir o pausar">' + ICON_PLAY + ICON_PAUSE + '</button>' +
+        '<div class="p-track" role="slider" tabindex="0" aria-label="Progreso del video" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div>' +
+        '<span class="p-time">0:00 / 0:00</span>' +
+        '<button class="p-full" type="button" aria-label="Pantalla completa">' + ICON_FULL + '</button>' +
+      '</div>' +
+      '<div class="p-missing"><div class="eyes eyes-md"><span class="eye"><i></i></span><span class="eye"><i></i></span></div>' +
+        '<strong>' + title + '</strong><span>Video pendiente, va en:</span><code>' + (src || 'Recursos/…') + '</code></div>';
+
+    var v = p.querySelector('video');
+    var fill = p.querySelector('.p-track i');
+    var track = p.querySelector('.p-track');
+    var time = p.querySelector('.p-time');
+    var markMissing = function(){ p.classList.add('missing'); };
+
+    if(!src){ markMissing(); return; }
+    if(poster){ v.setAttribute('poster', poster); }
+    var source = document.createElement('source');
+    source.src = src;
+    source.addEventListener('error', markMissing);
+    v.addEventListener('error', markMissing);
+    v.appendChild(source);
+
+    var toggle = function(){
+      if(v.paused){ var pr = v.play(); if(pr && pr.catch){ pr.catch(function(){}); } }
+      else { v.pause(); }
+    };
+    p.querySelector('.p-big').addEventListener('click', toggle);
+    p.querySelector('.p-play').addEventListener('click', toggle);
+    v.addEventListener('click', toggle);
+    v.addEventListener('play', function(){ p.classList.add('playing'); });
+    v.addEventListener('pause', function(){ p.classList.remove('playing'); });
+    v.addEventListener('ended', function(){ p.classList.remove('playing'); });
+    var paint = function(){
+      var pct = v.duration ? (v.currentTime / v.duration) * 100 : 0;
+      fill.style.width = pct + '%';
+      track.setAttribute('aria-valuenow', Math.round(pct));
+      time.textContent = fmt(v.currentTime) + ' / ' + fmt(v.duration);
+    };
+    v.addEventListener('timeupdate', paint);
+    v.addEventListener('loadedmetadata', paint);
+    track.addEventListener('click', function(e){
+      var r = track.getBoundingClientRect();
+      if(v.duration){ v.currentTime = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * v.duration; }
+    });
+    track.addEventListener('keydown', function(e){
+      if(!v.duration){ return; }
+      if(e.key === 'ArrowRight'){ v.currentTime = Math.min(v.duration, v.currentTime + 5); e.preventDefault(); }
+      if(e.key === 'ArrowLeft'){ v.currentTime = Math.max(0, v.currentTime - 5); e.preventDefault(); }
+    });
+    p.querySelector('.p-full').addEventListener('click', function(){
+      try{
+        var req = p.requestFullscreen || p.webkitRequestFullscreen;
+        if(req){ var r = req.call(p); if(r && r.catch){ r.catch(function(){ if(v.webkitEnterFullscreen){ v.webkitEnterFullscreen(); } }); } }
+        else if(v.webkitEnterFullscreen){ v.webkitEnterFullscreen(); }
+      }catch(err){}
+    });
+  });
+})();
+
+</script>
+
+</body>
+</html>
