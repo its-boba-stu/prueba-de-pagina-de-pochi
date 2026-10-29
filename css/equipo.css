@@ -1,0 +1,32 @@
+/* ==================================================================
+   ESTILOS DE EQUIPO (equipo.html)
+   ================================================================== */
+
+/* ---------- EQUIPO: por qué y colegio ---------- */
+.why{display:grid;gap:24px;align-items:center}
+@media (min-width:820px){ .why{grid-template-columns:auto 1fr} }
+.why .quote{margin:0}
+.why figcaption{margin-top:12px;font-family:var(--font-display);color:var(--accent);font-weight:500}
+.why blockquote{margin:0;font-family:var(--font-display);font-size:clamp(1.2rem,2.4vw,1.55rem);line-height:1.4;color:var(--ink);max-width:40ch}
+/* Colegio Capouilliez: rojo y amarillo del colegio */
+.capo{--capo-r:#c8102e;--capo-r2:#8f0b20;--capo-y:#ffc72c;
+  position:relative;overflow:hidden;display:grid;gap:28px;align-items:center;padding:clamp(26px,4.5vw,48px);
+  border-radius:var(--radius);color:#fff;background:linear-gradient(130deg,var(--capo-r) 0%,var(--capo-r2) 100%);
+  box-shadow:0 18px 40px -22px rgba(143,11,32,.7)}
+html[data-modo="luna"] .capo{--capo-r:#a30d26;--capo-r2:#5e0716;box-shadow:0 18px 40px -22px rgba(0,0,0,.8)}
+@media (min-width:820px){ .capo{grid-template-columns:minmax(220px,300px) 1fr;gap:44px} }
+.capo::before{content:"";position:absolute;right:-90px;top:-90px;width:300px;height:300px;border-radius:50%;
+  border:28px solid var(--capo-y);opacity:.16}
+.capo::after{content:"";position:absolute;left:0;top:0;bottom:0;width:8px;background:var(--capo-y)}
+.capo-logo{position:relative;background:#fff;border-radius:14px;padding:22px 20px;display:grid;place-items:center;
+  box-shadow:0 0 0 4px var(--capo-y),0 14px 30px -14px rgba(0,0,0,.45)}
+.capo-logo img{width:100%;max-width:260px;height:auto;display:block}
+.capo-text{position:relative}
+.capo-kicker{display:inline-block;font:600 .74rem/1 var(--font-display);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--capo-r2);background:var(--capo-y);padding:7px 11px;border-radius:99px}
+.capo h2{margin:14px 0 0;color:#fff;font-size:clamp(1.45rem,2.8vw,2rem);line-height:1.2}
+.capo h2 span{color:var(--capo-y)}
+.capo p{color:#ffe3e7;margin-top:10px;max-width:56ch}
+.capo-btn{margin-top:20px;background:var(--capo-y);color:#5e0716;font-weight:700}
+.capo-btn:hover{background:#fff;color:var(--capo-r);box-shadow:0 0 0 3px var(--capo-y)}
+

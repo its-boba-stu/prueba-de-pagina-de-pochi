@@ -1,0 +1,119 @@
+/* ==================================================================
+   ESTILOS DE JUEGO (juego.html)
+   ================================================================== */
+
+/* ---------- JUEGO ---------- */
+.explain-grid{display:grid;gap:24px;margin-top:28px;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))}
+.explain-grid .card{padding:24px}
+.explain-ico{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;background:var(--navy);margin-bottom:14px}
+.explain-ico svg{width:24px;height:24px}
+
+
+/* ==================================================================
+   EL JUEGO
+   ================================================================== */
+
+/* ==================================================================
+   JUEGO: laberinto de Pochi (demo en el inicio, 5 niveles en juego.html)
+   ================================================================== */
+.game{
+  position:relative; padding:clamp(14px,2.4vw,24px); border-radius:16px;
+  background:var(--navy); color:#e9eefb; border:1px solid var(--navy-line);
+  box-shadow:0 0 15px var(--glow); margin-top:30px;
+}
+.g-top{display:flex;flex-wrap:wrap;gap:12px 22px;align-items:center;justify-content:space-between;margin-bottom:16px}
+.g-stats{display:flex;gap:22px;flex-wrap:wrap}
+.g-stat span{display:block;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:#8fa3c8;font-family:var(--font-display)}
+.g-stat b{font-family:var(--font-mono);font-size:1.12rem;color:#fff;font-variant-numeric:tabular-nums}
+.g-pips{display:flex;gap:6px;align-items:center}
+.g-pips i{width:24px;height:8px;border-radius:99px;background:#2c3c66;transition:background .3s}
+.g-pips i.done{background:var(--eye)}
+.g-pips i.cur{background:var(--sky)}
+.g-body{display:grid;gap:16px}
+@media (min-width:880px){ .g-body{grid-template-columns:minmax(0,1fr) 280px} }
+.g-stage{position:relative;min-width:0}
+.g-canvas{
+  display:block;width:100%;height:auto;border-radius:10px;background:#f7f4ee;
+  border:1px solid #2c3c66;touch-action:none;cursor:crosshair;
+}
+.g-side{display:flex;flex-direction:column;gap:12px;min-width:0}
+@media (min-width:560px) and (max-width:879px){ .g-side{display:grid;grid-template-columns:1fr 1fr;align-items:start} .g-side .g-msg{grid-column:1/-1} }
+.g-panel{background:#0f1830;border:1px solid #2c3c66;border-radius:10px;padding:14px}
+.g-label{font-family:var(--font-display);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:#8fa3c8;margin-bottom:10px;display:flex;justify-content:space-between;gap:8px}
+.sig{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.sig-bars{display:flex;gap:4px;align-items:flex-end;height:34px;flex:1;max-width:120px}
+.sig-bars i{flex:1;border-radius:3px;background:#24345e;transition:background .2s}
+.sig-bars i:nth-child(1){height:20%} .sig-bars i:nth-child(2){height:40%} .sig-bars i:nth-child(3){height:60%} .sig-bars i:nth-child(4){height:80%} .sig-bars i:nth-child(5){height:100%}
+.sig-bars.weak i.on{background:var(--orange)}
+.sig-bars.mid i.on{background:var(--sky)}
+.sig-bars.strong i.on{background:var(--eye)}
+.sig-dbm{font-family:var(--font-mono);font-size:1.25rem;color:#fff;font-variant-numeric:tabular-nums;white-space:nowrap}
+.g-msg{font-size:.92rem;color:#c5d1ea;line-height:1.5;background:#0f1830;border:1px solid #2c3c66;border-radius:10px;padding:12px 14px;min-height:3.2em}
+.g-msg strong{color:var(--eye)}
+.g-help{font-size:.8rem;color:#8fa3c8;line-height:1.55}
+.g-help kbd{font-family:var(--font-mono);font-size:.72rem;background:var(--navy-2);border:1px solid #34467a;border-radius:5px;padding:1px 6px;color:#fff}
+
+/* control táctil */
+.dpad{
+  display:none; grid-template-columns:repeat(3,56px); grid-template-rows:repeat(3,56px); gap:6px;
+  justify-content:center; margin-top:14px; touch-action:none; user-select:none; -webkit-user-select:none;
+}
+@media (hover:none), (pointer:coarse){ .dpad{display:grid} }
+.dpad button{
+  border-radius:12px;background:var(--navy-2);border:1px solid #34467a;color:#fff;cursor:pointer;
+  display:grid;place-items:center;touch-action:none;-webkit-tap-highlight-color:transparent;
+}
+.dpad button svg{width:22px;height:22px;fill:#fff}
+.dpad button{transition:transform .15s ease, background .15s ease}
+.dpad button:hover{transform:scale(1.06)}
+.dpad button.on,.dpad button:active{background:var(--pressed);border-color:var(--eye);transform:scale(.96)}
+.dpad [data-dir="up"]{grid-column:2;grid-row:1}
+.dpad [data-dir="left"]{grid-column:1;grid-row:2}
+.dpad [data-dir="right"]{grid-column:3;grid-row:2}
+.dpad [data-dir="down"]{grid-column:2;grid-row:3}
+.dpad .dpad-c{grid-column:2;grid-row:2;display:grid;place-items:center}
+
+/* ventanas del juego (empezar / te chocaste / nivel superado) */
+.g-modal{
+  position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;
+  padding:16px;border-radius:16px;background:rgba(14,22,44,.74);
+  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);
+}
+.g-modal[hidden]{display:none}
+.g-card{
+  width:100%;max-width:380px;background:var(--surface);color:var(--ink);border-radius:14px;
+  padding:26px 22px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;
+  box-shadow:0 0 15px var(--glow), 0 24px 50px -20px rgba(0,0,0,.5);animation:gPop .35s cubic-bezier(.2,1.3,.4,1);
+}
+.g-card h3{font-size:clamp(1.3rem,3vw,1.6rem)}
+.g-card p{font-size:.95rem;color:var(--ink-dim)}
+.g-card .btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px}
+.g-card.crash{border-top:4px solid var(--danger)}
+.g-card.crash h3{color:var(--danger)}
+.g-card.win{border-top:4px solid var(--eye)}
+@keyframes gPop{from{transform:scale(.88);opacity:0}to{transform:none;opacity:1}}
+.g-shake{animation:gShake .4s ease}
+@keyframes gShake{0%,100%{transform:none}20%{transform:translateX(-8px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
+
+/* celebración final: pastilla girando + confeti */
+.celebrate{
+  position:absolute;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;
+  padding:20px;border-radius:inherit;overflow:hidden;
+  background:color-mix(in srgb, var(--bg) 90%, transparent);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);
+}
+.celebrate[hidden]{display:none}
+.celebrate canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.cele-card{position:relative;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;max-width:480px}
+.cele-pill{width:clamp(110px,22vw,190px);height:auto;filter:drop-shadow(0 18px 24px rgba(20,33,61,.25))}
+.cele-card h2{font-size:clamp(2.2rem,6vw,3.8rem);color:var(--accent);letter-spacing:-.02em}
+.cele-sub{font-size:1rem;color:var(--ink-dim)}
+.cele-sub b{color:var(--ink);font-family:var(--font-mono)}
+.cele-best{font-family:var(--font-display);font-weight:600;color:var(--ok);min-height:1.4em}
+.cele-btns{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:4px}
+.celebrate.go .cele-pill{animation:pillSpin 1.9s cubic-bezier(.2,.8,.2,1) both}
+.celebrate.go h2{animation:celePop .55s cubic-bezier(.2,1.5,.4,1) 1.3s both}
+.celebrate.go .cele-sub,.celebrate.go .cele-best{animation:celeFade .5s ease 1.6s both}
+.celebrate.go .cele-btns{animation:celeFade .5s ease 1.8s both}
+@keyframes pillSpin{0%{transform:translateY(90px) scale(.05) rotate(0deg);opacity:0}15%{opacity:1}70%{transform:translateY(-8px) scale(1.18) rotate(1000deg)}100%{transform:none}}
+@keyframes celePop{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}
+@keyframes celeFade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
